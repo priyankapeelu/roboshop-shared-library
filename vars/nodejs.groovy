@@ -5,3 +5,22 @@ def lintChecks() {
     echo Lint Check
   '''
 }
+
+def call() {
+
+    pipeline {
+        agent any
+
+        stages {
+
+            //for each commit
+            stage('lint checks') {
+                steps {
+                    script {
+                        lintChecks()
+                    }
+                }
+            } //End of stages
+        }
+    }
+}
