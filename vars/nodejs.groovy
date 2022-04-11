@@ -11,6 +11,8 @@ def sonarCheck() {
       sonar-scanner -Dsonar.host.url=http://172.31.13.177:9000 -Dsonar.sources=. -Dsonar.projectkey=${COMPONENT} -Dsonar.login=${SONAR_USR} -Dsonar.password=${SONAR_PSW}
      '''
 }
+
+def call() {
     pipeline {
         agent any
 
@@ -40,3 +42,4 @@ def sonarCheck() {
         }// End of Stages
 
     }
+}
