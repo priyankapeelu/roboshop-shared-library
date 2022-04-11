@@ -6,7 +6,10 @@ def lintChecks() {
   '''
 }
 
-def call() {
+def sonarCheck() {
+    ssh '''
+      sonar-scanner -Dsonar.host.url=http://172.31.13.177:9000 -Dsonar.sources=. -Dsonar.projectkey=${COMPONENT} -Dsonar.login=${SONAR_USR} -Dsonar.password=${SONAR_PSW}
+     '''
 
     pipeline {
         agent any
