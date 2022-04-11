@@ -14,6 +14,10 @@ def sonarCheck() {
     pipeline {
         agent any
 
+        environment {
+            SONAR = credentials('SONAR')
+        }
+
         stages {
 
             //for each commit
