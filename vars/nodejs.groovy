@@ -40,5 +40,3 @@ def sonarCheck() {
         }// End of Stages
 
     }
-
-}
