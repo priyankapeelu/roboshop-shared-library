@@ -1,8 +1,8 @@
 def lintChecks() {
     sh '''
-    # we commented this because devs gonna check the failures
+    # We commented this because devs gonna check the failures.
     #~/node_modules/jslint/bin/jslint.js server.js
-    echo Lint Check for ${COMPONENT}
+    echo Link Check for ${COMPONENT}
   '''
 }
 
@@ -16,8 +16,8 @@ def call() {
 
         stages {
 
-            //for each commit
-            stage('lint checks') {
+            // For Each Commit
+            stage('Lint Checks') {
                 steps {
                     script {
                         lintChecks()
@@ -25,7 +25,7 @@ def call() {
                 }
             }
 
-            stage('Sonar Check') {
+            stage('SonarCheck') {
                 steps {
                     script {
                         env.ARGS="-Dsonar.sources=."
@@ -34,7 +34,10 @@ def call() {
                 }
             }
 
-        }// End of Stages
+
+        } // End of Stages
 
     }
+
+
 }
