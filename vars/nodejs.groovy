@@ -20,7 +20,18 @@ def call() {
                         lintChecks()
                     }
                 }
-            } //End of stages
-        }
+            }
+
+            stage('Sonar Check') {
+                steps {
+                    script {
+                        sonarCheck()
+                    }
+                }
+            }
+
+        }// End of Stages
+
     }
+
 }
