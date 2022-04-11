@@ -17,7 +17,7 @@ def call(COMPONENT) {
             stage('lint checks') {
                 steps {
                     script {
-                        lintChecks()
+                        lintChecks(COMPONENT)
                     }
                 }
             } //End of stages
