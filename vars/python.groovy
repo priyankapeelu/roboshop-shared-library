@@ -1,14 +1,14 @@
+
 def lintChecks() {
     sh '''
-    # we commented this because devs gonna check the failures
+    # We commented this because devs gonna check the failures.
     #~/node_modules/jslint/bin/jslint.js server.js
-    pylint *.py
-    echo link checks for ${COMPONENT}
+    #pylint *.py
+    echo Lint Check for ${COMPONENT}
   '''
 }
 
 def call() {
-
     pipeline {
         agent any
 
@@ -18,22 +18,27 @@ def call() {
 
         stages {
 
-            //for each commit
-            stage('lint checks') {
+            // For Each Commit
+            stage('Lint Checks') {
                 steps {
                     script {
                         lintChecks()
                     }
                 }
-            } //End of stages
+            }
 
-            stage('Sonar Check') {
+            stage('SonarCheck') {
                 steps {
                     script {
+                        env.ARGS="-Dsonar.sources=."
                         common.sonarCheck()
                     }
                 }
             }
-        }
+
+        } // End of Stages
+
     }
+
+
 }
