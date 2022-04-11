@@ -6,7 +6,7 @@ def lintChecks() {
   '''
 }
 
-def call(COMPONENT) {
+def call() {
 
     pipeline {
         agent any
@@ -17,7 +17,7 @@ def call(COMPONENT) {
             stage('lint checks') {
                 steps {
                     script {
-                        lintChecks(COMPONENT)
+                        lintChecks()
                     }
                 }
             } //End of stages
