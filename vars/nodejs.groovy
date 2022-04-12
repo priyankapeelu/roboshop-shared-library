@@ -28,13 +28,33 @@ def call() {
             stage('Sonar Check') {
                 steps {
                     script {
-                        env.ARGS="-Dsonar.sources=."
+                        env.ARGS = "-Dsonar.sources=."
                         common.sonarCheck()
                     }
                 }
             }
+            stage('Test Cases') {
+                parallel {
 
-        }// End of Stages
+                    stage('unit tests') {
+                        steps {
+                            sh 'echo unit Tests'
+                        }
+                    }
+                    stage('Integration Test') {
+                        steps {
+                            sh 'echo Integration Tests'
+                        }
+                    }
+                    stage('Functional tests') {
+                        steps {
+                            sh 'echo Functionnal Tests'
+                        }
+                    }
 
+                }
+            }
+        }
     }
+
 }
