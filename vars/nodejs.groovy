@@ -53,7 +53,7 @@ def call() {
                     }
 
                 }
-            }
+
             stage('prepare Artifacts')
             when {
                 expression { env.TAG_NAME != null }
@@ -74,4 +74,5 @@ def call() {
 
     }
 
+}
 }
