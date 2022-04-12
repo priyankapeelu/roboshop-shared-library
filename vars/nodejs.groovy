@@ -54,7 +54,24 @@ def call() {
 
                 }
             }
+            stage('prepare Artifacts')
+            when {
+                expression { env.TAG_NAME != null }
+            }
+            steps {
+                sh 'echo'
+            }
         }
+
+        stage('Upload Artifacts')
+        when {
+            expression { env.TAG_NAME != null }
+        }
+        steps {
+            sh 'echo'
+
+        }
+
     }
 
 }
