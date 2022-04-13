@@ -77,7 +77,7 @@ def call() {
                     }
                     steps {
                         sh '''
-                          curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}.zip http://172.31.5.42:8081/repository/${COMPONENT/${COMPONENT}-${TAG_NAME}.zip
+                          curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.5.42::8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
                           '''
                     }
 
