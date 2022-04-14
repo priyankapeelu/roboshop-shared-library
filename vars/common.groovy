@@ -41,6 +41,13 @@ def lintChecks() {
         echo Link Check for ${COMPONENT}
       '''
         }
+        else if (env.APP_TYPE == "nginx" ){
+            sh '''
+        # We commented this because devs gonna check the failures.
+        #~/node_modules/jslint/bin/jslint.js server.js
+        echo Link Check for ${COMPONENT}
+      '''
+        }
     }
 
 }
@@ -86,26 +93,35 @@ def artifacts() {
         '''
             } else if (env.APP_TYPE == "maven") {
                 sh '''
-                  mvn clear package
-                  mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar 
-                  zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}.jar
-                '''
+         mvn clean package 
+         mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar 
+         zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}.jar 
+        '''
             } else if (env.APP_TYPE == "python") {
                 sh '''
-                 zip -r ${COMPONENT}-${TAG_NAME}.zip *.py *.ini requirements.txt
+          zip -r ${COMPONENT}-${TAG_NAME}.zip *.py *.ini requirements.txt 
         '''
             } else if (env.APP_TYPE == "golang") {
                 sh '''
-                 echo 
-                '''
+          go mod init ${COMPONENT}
+          go get 
+          go build
+          zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}
+        '''
+            }
+            else if (env.APP_TYPE == "nginx" ){
+                sh '''
+          cd static 
+          zip -r ../${COMPONENT}-${TAG_NAME}.zip * 
+        '''
             }
         }
 
         stage('Upload Artifacts') {
             withCredentials([usernamePassword(credentialsId: 'NEXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
                 sh '''
-                curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.5.42:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
-                '''
+        curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.5.42:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
+      '''
             }
         }
 
