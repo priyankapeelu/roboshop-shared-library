@@ -86,7 +86,7 @@ def artifacts() {
         '''
             } else if (env.APP_TYPE == "maven") {
                 sh '''
-                 mvn clear package
+                  mvn clear package
                   mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar 
                   zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}.jar
                 '''
