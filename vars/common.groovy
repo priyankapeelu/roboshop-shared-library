@@ -112,9 +112,8 @@ def artifacts() {
             else if (env.APP_TYPE == "nginx" ){
                 sh '''
           cd static
-          ls -l ./
-          zip -r ../${COMPONENT}-${TAG_NAME}.zip * 
-        '''
+          '''
+
             }
         }
 
