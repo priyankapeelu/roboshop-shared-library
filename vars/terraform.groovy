@@ -22,7 +22,7 @@ def call() {
                     sh 'terraform plan -var-file=env-${ENV}/${ENV}.tfvars'
                 }
             }
-
     }
 }
+
 
