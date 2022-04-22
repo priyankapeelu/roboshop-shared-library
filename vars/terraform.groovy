@@ -8,7 +8,7 @@ def call() {
 
     node {
             sh 'rm -rf *'
-            git branch: 'main', url: "https://github.com/raghudevopsb63/${REPONAME}"
+            git branch: 'main', url: "https://github.com/priyankapeelu/${REPONAME}"
 
             stage('Terrafile INIT') {
                 sh 'terrafile -f env-${ENV}/Terrafile'
