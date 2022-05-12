@@ -16,11 +16,11 @@ def call() {
             }
 
             stage('Terraform INIT') {
-                sh 'terraform init -backend-config=env-${ENV}/${ENV}-backend.tfvars'
+                sh 'terraform init -reconfigure -backend-config=env-${ENV}/${ENV}-backend.tfvars'
             }
 
             stage('Terraform Plan') {
-                sh 'terraform plan -reconfigure -var-file=env-${ENV}/${ENV}.tfvars'
+                sh 'terraform plan -var-file=env-${ENV}/${ENV}.tfvars'
             }
 
             stage('Terraform Apply') {
