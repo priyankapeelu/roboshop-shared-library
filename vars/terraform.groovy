@@ -20,7 +20,7 @@ def call() {
             }
 
             stage('Terraform Plan') {
-                sh 'terraform plan -var-file=env-${ENV}/${ENV}.tfvars'
+                sh 'terraform plan -reconfigure -var-file=env-${ENV}/${ENV}.tfvars'
             }
 
             stage('Terraform Apply') {
