@@ -1,8 +1,12 @@
 def call() {
 
+    if (!env.TERRAFORM_DIR) {
+        env.TERRAFORM_DIR = "./"
+    }
+
     properties([
             parameters([
-                    choice(choices: 'dev\nprod', description: "Choose Environement", name: "ENV"),
+                    choice(choices: 'dev\nprod', description: "Choose Environment", name: "ENV"),
             ]),
     ])
 
@@ -12,19 +16,33 @@ def call() {
             git branch: 'main', url: "https://github.com/raghudevopsb63/${REPONAME}"
 
             stage('Terrafile INIT') {
-                sh 'terrafile -f env-${ENV}/Terrafile'
+                sh '''
+          cd ${TERRAFORM_DIR}
+          terrafile -f env-${ENV}/Terrafile
+        '''
             }
 
             stage('Terraform INIT') {
-                sh 'terraform init -backend-config=env-${ENV}/${ENV}-backend.tfvars'
+                sh '''
+          cd ${TERRAFORM_DIR}
+          terraform init -backend-config=env-${ENV}/${ENV}-backend.tfvars
+        '''
             }
 
             stage('Terraform Plan') {
-                sh 'terraform plan -var-file=env-${ENV}/${ENV}.tfvars'
+                sh '''
+          cd ${TERRAFORM_DIR}
+          export TF_VAR_APP_VERSION=${APP_VERSION}
+          terraform plan -var-file=env-${ENV}/${ENV}.tfvars 
+        '''
             }
 
             stage('Terraform Apply') {
-                sh 'terraform apply -var-file=env-${ENV}/${ENV}.tfvars -auto-approve'
+                sh '''
+          cd ${TERRAFORM_DIR}
+          export TF_VAR_APP_VERSION=${APP_VERSION}
+          terraform apply -var-file=env-${ENV}/${ENV}.tfvars -auto-approve
+        '''
             }
 
         }
