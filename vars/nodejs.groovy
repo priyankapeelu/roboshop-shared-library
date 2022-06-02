@@ -10,10 +10,6 @@ def call() {
     pipeline {
         agent any
 
-        environment {
-            NEXUS = credentials('NEXUS')
-        }
-
         stages {
 
             // For Each Commit
