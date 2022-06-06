@@ -74,7 +74,7 @@ def call() {
                 }
                 steps {
                     sh '''
-            curl -f -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.11.69:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
+            curl -f -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.0.155:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
           '''
                 }
             }
