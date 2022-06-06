@@ -13,6 +13,3 @@ def call() {
         }
     }
 }
-
-
-env.APP_TYPE = "python"
