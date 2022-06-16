@@ -77,11 +77,11 @@ def testCases() {
 def artifacts() {
 
     stage('Check The Release') {
-        env.UPLOAD_STATUS=sh(returnStdout: true, script: 'curl -L -s http://172.31.0.155:8081/service/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip || true')
+        env.UPLOAD_STATUS = sh(returnStdout: true, script: 'curl -L -s http://172.31.0.155:8081/service/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip || true')
         print UPLOAD_STATUS
     }
 
-    if(env.UPLOAD_STATUS == "") {
+    if (env.UPLOAD_STATUS == "") {
 
         stage('Prepare Artifacts') {
             if (env.APP_TYPE == "nodejs") {
@@ -108,8 +108,7 @@ def artifacts() {
           go build
           zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}
         '''
-            }
-            else if (env.APP_TYPE == "nginx" ){
+            } else if (env.APP_TYPE == "nginx") {
                 sh '''
           cd static
           zip -r ../${COMPONENT}-${TAG_NAME}.zip *
@@ -126,5 +125,11 @@ def artifacts() {
             }
         }
 
+        stage('Publish AMI')
+        sh '''
+            terraform init 
+            terraform apply -auto-approve
+          '''
+      }
     }
 }
