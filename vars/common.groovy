@@ -77,7 +77,7 @@ def testCases() {
 def artifacts() {
 
     stage('Check The Release') {
-        env.UPLOAD_STATUS=sh(returnStdout: true, script: 'curl -L -s http://172.31.5.42:8081/service/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip || true')
+        env.UPLOAD_STATUS=sh(returnStdout: true, script: 'curl -L -s http://172.31.0.155:8081/service/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip || true')
         print UPLOAD_STATUS
     }
 
@@ -121,7 +121,7 @@ def artifacts() {
         stage('Upload Artifacts') {
             withCredentials([usernamePassword(credentialsId: 'NEXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
                 sh '''
-        curl -f -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.5.42:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
+        curl -f -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.0.155:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
       '''
             }
         }
