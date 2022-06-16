@@ -77,54 +77,70 @@ def testCases() {
 def artifacts() {
 
     stage('Check The Release') {
-        env.UPLOAD_STATUS=sh(returnStdout: true, script: 'curl -L -s http://172.31.0.155:8081/service/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip || true')
-        print UPLOAD_STATUS
+        //env.UPLOAD_STATUS=sh(returnStdout: true, script: 'curl -L -s http://172.31.0.90:8081/service/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip || true')
+        //print UPLOAD_STATUS
+        // Ignoring previous version check for Immutable
+        env.UPLOAD_STATUS="trueee"
+        print 'OK'
     }
 
-    if(env.UPLOAD_STATUS == "") {
+    print env.UPLOAD_STATUS
 
-        stage('Prepare Artifacts') {
-            if (env.APP_TYPE == "nodejs") {
-                sh '''
+    //if(env.UPLOAD_STATUS == "") {
+
+    stage('Prepare Artifacts') {
+        if (env.APP_TYPE == "nodejs") {
+            sh '''
           ls -l
           npm install 
           ls -l
           zip -r ${COMPONENT}-${TAG_NAME}.zip node_modules server.js 
         '''
-            } else if (env.APP_TYPE == "maven") {
-                sh '''
+        } else if (env.APP_TYPE == "maven") {
+            sh '''
          mvn clean package 
          mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar 
          zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}.jar 
         '''
-            } else if (env.APP_TYPE == "python") {
-                sh '''
+        } else if (env.APP_TYPE == "python") {
+            sh '''
           zip -r ${COMPONENT}-${TAG_NAME}.zip *.py *.ini requirements.txt 
         '''
-            } else if (env.APP_TYPE == "golang") {
-                sh '''
+        } else if (env.APP_TYPE == "golang") {
+            sh '''
           go mod init ${COMPONENT}
           go get 
           go build
           zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}
         '''
-            }
-            else if (env.APP_TYPE == "nginx" ){
-                sh '''
-          cd static
-          zip -r ../${COMPONENT}-${TAG_NAME}.zip *
-          '''
-
-            }
         }
-
-        stage('Upload Artifacts') {
-            withCredentials([usernamePassword(credentialsId: 'NEXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
-                sh '''
-        curl -f -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.0.155:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
-      '''
-            }
+        else if (env.APP_TYPE == "nginx" ){
+            sh '''
+          cd static 
+          zip -r ../${COMPONENT}-${TAG_NAME}.zip * 
+        '''
         }
-
     }
+
+    stage('Upload Artifacts') {
+        withCredentials([usernamePassword(credentialsId: 'NEXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
+            sh '''
+        #curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.0.155:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
+        curl -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.0.155:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
+      '''
+        }
+    }
+
+    stage('Publish AMI') {
+        ansiColor('xterm') {
+            sh '''
+        rm -rf .terraform*
+        terraform init 
+        terraform apply -auto-approve -var APP_VERSION=${TAG_NAME}
+        terraform state rm module.ami.aws_ami_from_instance.ami
+        terraform destroy -auto-approve -var APP_VERSION=${TAG_NAME}
+      '''
+        }
+    }
+    //}
 }
