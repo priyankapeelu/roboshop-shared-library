@@ -126,7 +126,7 @@ def artifacts() {
         #withCredentials([usernamePassword(credentialsId: 'NEXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
             sh '''
         #curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://172.31.0.155:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
-        curl -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://3.93.187.142:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
+        curl -v -u admin:admin --upload-file ${COMPONENT}-${TAG_NAME}.zip  http://ip-172-31-19-185.ec2.internal:8081/repository/${COMPONENT}/${COMPONENT}-${TAG_NAME}.zip
       '''
         }
     }
